@@ -23,6 +23,8 @@ from spack_repo.builtin.build_systems.cmake import CMakePackage
 
 from spack.package import *
 
+import os
+
 
 class CmakeRpn(CMakePackage):
     """CMake modules used by RPN-SI projects."""
@@ -44,3 +46,14 @@ class CmakeRpn(CMakePackage):
     version("WIP-m2-build", branch="WIP-m2-build")
     with when("platform=darwin"):
         requires("@WIP-m2-build")
+
+    # I think it's the fact that MacOS is weirdly half case sensitive so vgrid's
+    # find_package(rmn) gets the FindRMN.cmake file from this repo.  Just remove
+    # it.  We could also add a patch to vgrid so it does
+    # find_package(rmn REQUIRED CONFIG)
+    # but since we would have to do that for every package that uses rmn this
+    # way, I think this is more simple and anyway that find module should be
+    # removed I think.
+    @when("platform=darwin")
+    def patch(self):
+        os.remove("modules/FindRMN.cmake")
