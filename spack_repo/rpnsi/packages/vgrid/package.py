@@ -43,3 +43,4 @@ class Vgrid(CMakePackage):
     depends_on("tdpack", type="build", when="+tdpack")
 
     patch("no_rmn_req_version.patch")
+    patch("sketchy_arg_mismatch_fix.patch")

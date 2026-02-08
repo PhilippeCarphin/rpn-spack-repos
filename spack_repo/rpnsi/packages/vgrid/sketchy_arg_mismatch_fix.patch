@@ -1,0 +1,73 @@
+diff --git a/src/utils/compute_pressure_gz.F90 b/src/utils/compute_pressure_gz.F90
+index 04a43c7..1a14a20 100644
+--- a/src/utils/compute_pressure_gz.F90
++++ b/src/utils/compute_pressure_gz.F90
+@@ -300,6 +300,7 @@ integer function cpg_get_rec(F_f, F_lui, match_prm) result(status)
+   end function cpg_get_rec
+   !===================================================================================
+   integer function cpg_fstecr(F_lu,rec,F_rewrit,data) result(status)
++    use, intrinsic :: iso_c_binding
+     implicit none
+     integer :: F_lu
+     type(cpg_rpn) :: rec
+@@ -315,7 +316,7 @@ integer function cpg_fstecr(F_lu,rec,F_rewrit,data) result(status)
+     else
+        ptr=>rec%data
+     endif
+-    ier = fstecr(ptr,dumr,-rec%nbits,F_lu,rec%dateo,rec%deet,rec%npas,rec%ni,rec%nj,&
++    ier = fstecr(C_LOC(ptr),dumr,-rec%nbits,F_lu,rec%dateo,rec%deet,rec%npas,rec%ni,rec%nj,&
+          rec%nk,rec%ip1,rec%ip2,rec%ip3,rec%typvar,rec%nomvar,rec%etiket,rec%grtyp,&
+          rec%ig1,rec%ig2,rec%ig3,rec%ig4,rec%datyp,F_rewrit)
+     if(ier.ne.0)then
+@@ -927,6 +928,7 @@ end function cpg_get_gz_5002_5005_5100
+   !===================================================================================
+   integer function cpg_get_vgd_levels() result(stat)
+ 
++    use, intrinsic :: iso_c_binding
+     use vGrid_Descriptors, only: vgd_new,vgd_levels,vgd_get, &
+            vgrid_descriptor,vgd_print,vgd_write,&
+            VGD_LEN_RFLD, VGD_LEN_RFLS, VGD_NO_REF_NOMVAR
+@@ -1180,8 +1182,8 @@ integer function cpg_get_vgd_levels() result(stat)
+              record%nomvar="GZ"
+           endif
+           if(cpg_zap_etiket_L)record%etiket=cpg_etiket_s
+-          ier=fstecr(pres,dummy,-record%nbits,cpg_luo,record%dateo,record%deet,record%npas, &
+-               record%ni,record%nj,record%nk,ip1_single,record%ip2,record%ip3, &
++          ier=fstecr(C_LOC(pres),dummy,-record%nbits,cpg_luo,record%dateo,record%deet,record%npas, &
++               record%ni,record%nj,record%nk,ip1_single(1),record%ip2,record%ip3, &
+                record%typvar,record%nomvar,record%etiket,record%grtyp, &
+                record%ig1,record%ig2,record%ig3,record%ig4,record%datyp,.true.)
+           if(ier.lt.0)then
+diff --git a/src/utils/convert_toctoc_5002.F90 b/src/utils/convert_toctoc_5002.F90
+index 5f9b9b5..bae28a8 100644
+--- a/src/utils/convert_toctoc_5002.F90
++++ b/src/utils/convert_toctoc_5002.F90
+@@ -12,8 +12,8 @@ program convert_toctoc_5002
+    integer :: i,key,luo
+    character(len=256), dimension(ncle) :: cle,val,def
+    logical :: info_L
+-   real, allocatable, dimension(:,:) :: tocsf,p0
+-   real(kind=REAL64), allocatable, dimension(:,:) :: toctoc
++   real, allocatable, dimension(:,:), target :: tocsf,p0
++   real(kind=REAL64), allocatable, dimension(:,:), target :: toctoc
+    real :: dummy
+    real(kind=REAL64) :: nhours
+    logical :: samefile_L
+@@ -123,7 +123,7 @@ program convert_toctoc_5002
+            ig4,swa,lng,dltf,ubc,extra1,extra2,extra3)
+       if(allocated(tocsf))deallocate(tocsf)
+       allocate(tocsf(ni,nj))
+-      istat=fstluk(tocsf,liste(i),ni,nj,nk)
++      istat=fstluk(C_LOC(tocsf),liste(i),ni,nj,nk)
+       if(istat.lt.0)then
+          istat=fstfrm(lui)
+          if(samefile_L)istat=fstfrm(luo)
+@@ -171,7 +171,7 @@ program convert_toctoc_5002
+       ! Decode !! and reencode it to the format 5002      
+       if(allocated(toctoc))deallocate(toctoc)
+       allocate(toctoc(ni,nj))
+-      istat=fstluk(toctoc,liste(i),ni,nj,nk)
++      istat=fstluk(C_LOC(toctoc),liste(i),ni,nj,nk)
+       if(istat.lt.0)then
+          istat=fstfrm(lui)
+          if(.not.samefile_L)istat=fstfrm(luo)
