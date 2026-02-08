@@ -44,3 +44,4 @@ class Vgrid(CMakePackage):
 
     patch("no_rmn_req_version.patch")
     patch("sketchy_arg_mismatch_fix.patch")
+    patch("remove_link_options.patch")

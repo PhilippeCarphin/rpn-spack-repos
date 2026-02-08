@@ -1,0 +1,35 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index aaee88c..226342f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -27,7 +27,7 @@ include(ec_openmp)           # Enable OpenMP (-DWITH_OPENMP=TRUE)
+ set(CMAKE_C_FLAGS_RELWITHDEBINFO "-O1")
+ 
+ # Needed since ubuntu 20.04
+-set(CMAKE_EXE_LINKER_FLAGS "-Wl,--no-as-needed -ldl")
++set(CMAKE_EXE_LINKER_FLAGS "-Wl,-ldl")
+ 
+ if (NOT rmn_FOUND)
+    find_package(rmn ${rmn_REQ_VERSION} REQUIRED)
+@@ -37,8 +37,6 @@ if (NOT tdpack_FOUND)
+    find_package(tdpack ${tdpack_REQ_VERSION})
+ endif()
+ 
+-link_libraries("-Wl,--disable-new-dtags")
+-
+ set(VGRID_BUILD_SHARED ON)
+ if (${RMN_LLVM_ADDRESS_SANITIZER})
+     set(VGRID_BUILD_SHARED OFF)
+diff --git a/src/utils/CMakeLists.txt b/src/utils/CMakeLists.txt
+index e2435aa..9f3b6f8 100644
+--- a/src/utils/CMakeLists.txt
++++ b/src/utils/CMakeLists.txt
+@@ -2,7 +2,7 @@ message(STATUS "(EC) Generating targets for vgrid utilities")
+ 
+ set_source_files_properties(compute_pressure_gz.F90 convert_toctoc_5002.F90 add_toctoc.F90 print_toctoc.F90 vcode.F90  vgrid_sample.F90
+ PROPERTIES Fortran_PREPROCESS ON)
+-set(CMAKE_EXE_LINKER_FLAGS "-Wl,--no-as-needed -ldl")
++set(CMAKE_EXE_LINKER_FLAGS "-Wl,-ldl")
+ 
+ if (tdpack_FOUND)
+    add_executable(r.compute_pressure_gz compute_pressure_gz.F90)
