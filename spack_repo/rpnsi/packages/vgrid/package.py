@@ -42,3 +42,4 @@ class Vgrid(CMakePackage):
     depends_on("librmn", type="build")
     depends_on("tdpack", type="build", when="+tdpack")
 
+    patch("no_rmn_req_version.patch")

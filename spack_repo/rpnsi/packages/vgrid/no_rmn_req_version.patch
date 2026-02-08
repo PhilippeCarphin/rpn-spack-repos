@@ -1,0 +1,18 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index aaee88c..98f7421 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -30,11 +30,11 @@ set(CMAKE_C_FLAGS_RELWITHDEBINFO "-O1")
+ set(CMAKE_EXE_LINKER_FLAGS "-Wl,--no-as-needed -ldl")
+ 
+ if (NOT rmn_FOUND)
+-   find_package(rmn ${rmn_REQ_VERSION} REQUIRED)
++   find_package(rmn REQUIRED)
+ endif()
+ 
+ if (NOT tdpack_FOUND)
+-   find_package(tdpack ${tdpack_REQ_VERSION})
++   find_package(tdpack)
+ endif()
+ 
+ link_libraries("-Wl,--disable-new-dtags")
