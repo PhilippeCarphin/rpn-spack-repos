@@ -39,8 +39,8 @@ class Vgrid(CMakePackage):
     version("dev", branch="dev")
 
     depends_on("cmake-rpn", type="build")
-    depends_on("librmn", type="build")
-    depends_on("tdpack", type="build", when="+tdpack")
+    depends_on("librmn")
+    depends_on("tdpack", when="+tdpack")
 
     patch("no_rmn_req_version.patch")
     patch("sketchy_arg_mismatch_fix.patch")
