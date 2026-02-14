@@ -36,16 +36,5 @@ class Tdpack(CMakePackage):
 
     version("master", branch="master")
 
-    variant("mpi", default=False)
-
     depends_on("cmake-rpn", type="build")
     depends_on("librmn", type="build")
-
-    with when("+mpi"):
-        depends_on("openmpi")
-
-    def cmake_args(self):
-        args = []
-        with when("-mpi"):
-            args.append("-DWITH_OMPI=OFF")
-        return args
