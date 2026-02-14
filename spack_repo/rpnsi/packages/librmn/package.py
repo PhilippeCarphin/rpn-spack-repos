@@ -49,17 +49,16 @@ class Librmn(CMakePackage):
     depends_on("cmake-rpn", type="build")
 
     with when("+mpi"):
-        depends_on("openmpi")
+        depends_on("mpi")
+        depends_on("llvm-openmp")
 
     with when("platform=darwin") or when("target=aarch64"):
         requires("@WIP-m2-build", msg="Only WIP-m2-build can be built on darwin")
-        requires("-mpi", msg="Not doing mpi stuff for now on darwin")
 
     # Haven't tested if this makes a difference
     provides("app")
 
+    @when("-mpi")
     def cmake_args(self):
-        args = []
-        with when("-mpi"):
-            args.append("-DWITH_OMPI=OFF")
+        args = ["-DWITH_OMPI=OFF"]
         return args
