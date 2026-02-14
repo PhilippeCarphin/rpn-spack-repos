@@ -57,3 +57,4 @@ class CmakeRpn(CMakePackage):
     @when("platform=darwin")
     def patch(self):
         os.remove("modules/FindRMN.cmake")
+        os.remove("modules/FindVGRID.cmake")
